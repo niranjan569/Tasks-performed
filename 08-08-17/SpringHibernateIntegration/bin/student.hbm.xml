@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"file:///E:/Users/reddyrr/Downloads/Dtd/hibernate-mapping-3.0.dtd">
+<!-- Hibernate mapping file -->
+<hibernate-mapping>
+	<class name="com.entity.Student">
+		<id name="id">
+			<generator class="assigned"></generator>
+		</id>
+		<property name="pName">
+			<column name="name"></column>
+		</property>
+		<property name="pAge">
+			<column name="age"></column>
+		</property>
+		<property name="pDepartment">
+			<column name="department"></column>
+		</property>
+	</class>
+</hibernate-mapping>

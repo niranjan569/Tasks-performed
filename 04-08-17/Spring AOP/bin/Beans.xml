@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans.xsd   
+       http://www.springframework.org/schema/aop   
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- <aop:aspectj-autoproxy /> -->
+
+	<!-- Define beans that we have created -->
+	<bean id="operation" class="com.aspectjXml.Operation"></bean>
+	<bean id="trackOperation" class="com.aspectjXml.TrackOperation"></bean>
+
+	<aop:config>
+
+		<!-- Defining oour aspect class -->
+		<aop:aspect id="myaspect" ref="trackOperation">
+
+			<!-- @Before -->
+			<aop:pointcut id="allMethods"
+				expression="execution(* com.aspectjXml.Operation.*(..))" />
+			<aop:before method="beforeAdvice" pointcut-ref="allMethods" />
+
+			<!-- @After -->
+			<aop:pointcut id="methodsStartWithM"
+				expression="execution(* com.aspectjXml.Operation.m*(..))" />
+			<aop:after method="afterAdvice" pointcut-ref="methodsStartWithM" />
+
+			<!-- @AfterReturning -->
+			<aop:pointcut id="pointCutAfterReturning"
+				expression="execution(* com.aspectjXml.Operation.*(..))" />
+			<aop:after-returning method="afterReturn"
+				returning="result" pointcut-ref="pointCutAfterReturning" />
+
+			<!-- @Around -->
+			<aop:pointcut id="displayAround"
+				expression="execution(* com.aspectjXml.Operation.display())" />
+			<aop:around method="aroundAdvice" pointcut-ref="displayAround" />
+
+			<!-- @AfterThrowing -->
+			<aop:pointcut id="pointCutAfterThrowing"
+				expression="execution(* com.aspectjXml.Operation.*(..))" />
+			<aop:after-throwing method="myadvice" throwing="error"
+				pointcut-ref="pointCutAfterThrowing" />
+		</aop:aspect>
+	</aop:config>
+</beans>
+
