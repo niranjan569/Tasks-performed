@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.1xsd">
+	<!-- Configuring datasource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/niranjan"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value=""></property>
+	</bean>
+
+	<!-- Configuring sessionfactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- injecting datasource -->
+		<property name="dataSource" ref="dataSource"></property>
+
+		<!-- define mapping files as list -->
+		<property name="mappingResources">
+			<list>
+				<value>account.hbm.xml</value>
+			</list>
+		</property>
+
+		<!-- define hibernate properties -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<!-- <prop key="hibernate.show_sql">true</prop> -->
+			</props>
+		</property>
+	</bean>
+
+	<!-- Defining HibernateTemplate as a bean and injecting sessionfactory -->
+	<bean id="template" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- Defining AccountDao as a bean and injecting template -->
+	<bean id="accountDao" class="com.dao.AccountDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<!-- Defining accountAspects as a bean and injecting template and sessionfactory-->
+	<bean id="accountAspects" class="com.aspects.AccountAspects">
+		<property name="factory" ref="sessionFactory"></property>
+		<property name="template" ref="template"></property>
+	</bean>
+
+	<!-- To use aop annotations -->
+	<bean
+		class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"></bean>
+</beans>
